@@ -11,10 +11,16 @@ AMovingPlatform::AMovingPlatform()
 void AMovingPlatform::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	StartLocation = GetActorLocation();
 	EndLocation = StartLocation + PlatformVelocity;
 	StartToEndLocation = FVector::Distance(StartLocation, EndLocation);
+
+	if (HasAuthority()) {
+		SetReplicates(true);
+		SetReplicateMovement(true);
+	}
+
 }
 
 void AMovingPlatform::Tick(float DeltaTime)
