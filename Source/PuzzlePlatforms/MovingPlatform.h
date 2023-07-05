@@ -17,13 +17,17 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	
+	UPROPERTY(EditAnywhere)
+	float Speed = 20;
+
+	UPROPERTY(EditAnywhere, Meta = (MakeEditWidget = true))
+	FVector TargetLocation;
+	
+private:
+
 	FVector StartLocation;
-	FVector EndLocation;
-	float StartToEndLocation;
+	FVector GlobalTargetLocation;
+	FVector Direction;
 
-	UPROPERTY(EditAnywhere)
-	FVector PlatformVelocity{10, 0, 0};
-
-	UPROPERTY(EditAnywhere)
-	float MoveDistance = 5.f;
+	float StartToEndDistance;
 };

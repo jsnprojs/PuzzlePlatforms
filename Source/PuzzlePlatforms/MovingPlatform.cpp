@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MovingPlatform.h"
-
+#include "Algo/Reverse.h"
 AMovingPlatform::AMovingPlatform()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -11,33 +11,35 @@ AMovingPlatform::AMovingPlatform()
 void AMovingPlatform::BeginPlay()
 {
 	Super::BeginPlay();
-
 	StartLocation = GetActorLocation();
-	EndLocation = StartLocation + PlatformVelocity;
-	StartToEndLocation = FVector::Distance(StartLocation, EndLocation);
+	GlobalTargetLocation = GetTransform().TransformPosition(TargetLocation);
+
+	StartToEndDistance = FVector::Distance(StartLocation, GlobalTargetLocation);
+	Direction = (GlobalTargetLocation - StartLocation).GetSafeNormal();
 
 	if (HasAuthority()) {
 		SetReplicates(true);
 		SetReplicateMovement(true);
 	}
-
 }
 
 void AMovingPlatform::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
-	if (HasAuthority()) {
-		FVector LastLocation = GetActorLocation();
-		FVector MoveDirection = PlatformVelocity.GetSafeNormal();
-		FVector NextLocation = LastLocation + MoveDirection * MoveDistance;
-		float TraveledDistance = FVector::Distance(StartLocation, NextLocation);
 
-		if (TraveledDistance > StartToEndLocation) {
-			PlatformVelocity = -PlatformVelocity;
+	if (HasAuthority())
+	{
+		FVector Location = GetActorLocation();
+		float CurrentDistance = FVector::Distance(Location, StartLocation);
+
+		if (CurrentDistance > StartToEndDistance) {
+			Swap(GlobalTargetLocation, StartLocation);
+			Direction = -Direction;
 		}
-		SetActorLocation(NextLocation);
-	}
 
+		Location += Speed * DeltaTime * Direction;
+
+		SetActorLocation(Location);
+	}
 }
 
