@@ -12,3 +12,23 @@ void UPuzzlePlatformsGameInstance::Init()
 {
 	UE_LOG(LogTemp, Warning, TEXT("GameInstance Init"))
 }
+
+void UPuzzlePlatformsGameInstance::Host()
+{
+	TObjectPtr<UWorld> World = GetWorld();
+
+	if (!World) { return; }
+
+	World->ServerTravel("/Game/ThirdPerson/Maps/ThirdPersonMap?listen");
+	
+	if (GEngine) {
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Hosting"));
+	}
+}
+
+void UPuzzlePlatformsGameInstance::Join(FString Address)
+{
+	if (GEngine) {
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, (TEXT("Joining %s"), Address));
+	} 
+}
