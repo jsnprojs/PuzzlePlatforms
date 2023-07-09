@@ -3,6 +3,7 @@
 
 #include "MainMenu.h"
 #include "Components/Button.h"
+#include "../PuzzlePlatformsGameInstance.h"
 
 bool UMainMenu::Initialize()
 {
@@ -16,7 +17,15 @@ bool UMainMenu::Initialize()
 	return true;
 }
 
+void UMainMenu::SetMenuInterface(IMenuInterface* ParamMenuInterface)
+{
+	this->MenuInterface = ParamMenuInterface;
+}
+
 void UMainMenu::HostServer()
 {
-	UE_LOG(LogTemp, Warning, TEXT("I'm gonna host a server!"));
+	if (MenuInterface)
+	{
+		MenuInterface->Host();
+	}
 }

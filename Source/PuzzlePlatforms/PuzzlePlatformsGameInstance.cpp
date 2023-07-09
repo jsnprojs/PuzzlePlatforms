@@ -3,6 +3,7 @@
 
 #include "PuzzlePlatformsGameInstance.h"
 #include "Blueprint/UserWidget.h" 
+#include "MenuSystem/MainMenu.h"
 
 UPuzzlePlatformsGameInstance::UPuzzlePlatformsGameInstance(const FObjectInitializer& ObjectInitializer)
 {
@@ -17,7 +18,7 @@ void UPuzzlePlatformsGameInstance::Init()
 void UPuzzlePlatformsGameInstance::Host()
 {
 	TObjectPtr<UWorld> World = GetWorld();
-
+	UE_LOG(LogTemp, Warning, TEXT("aaaaaaaa!"))
 	if (!World) { return; }
 
 	World->ServerTravel("/Game/ThirdPerson/Maps/ThirdPersonMap?listen");
@@ -41,11 +42,9 @@ void UPuzzlePlatformsGameInstance::Join(FString Address)
 
 void UPuzzlePlatformsGameInstance::LoadMenu()
 {
-	if (GEngine) {
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, (TEXT("Loading Menu")));
-	}
+
 	if (!UserWidgetClass) { return; }
-	TObjectPtr<UUserWidget> Menu = CreateWidget<UUserWidget>(this, UserWidgetClass);
+	TObjectPtr<UMainMenu> Menu = CreateWidget<UMainMenu>(this, UserWidgetClass);
 
 	if (!Menu) { return; }
 	Menu->AddToViewport();
@@ -58,4 +57,6 @@ void UPuzzlePlatformsGameInstance::LoadMenu()
 	ModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
 	PlayerController->SetInputMode(ModeData);
 	PlayerController->bShowMouseCursor = true;
+
+	Menu->SetMenuInterface(this);
 }
