@@ -6,9 +6,7 @@
 #include "Engine/GameInstance.h"
 #include "PuzzlePlatformsGameInstance.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class PUZZLEPLATFORMS_API UPuzzlePlatformsGameInstance : public UGameInstance
 {
@@ -24,4 +22,11 @@ public:
 
 	UFUNCTION(Exec)
 	void Join(FString Address);
+	
+	UFUNCTION(BlueprintCallable)
+	void LoadMenu();
+protected:
+	
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UUserWidget> UserWidgetClass;
 };

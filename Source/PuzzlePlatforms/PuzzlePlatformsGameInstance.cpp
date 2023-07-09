@@ -2,6 +2,7 @@
 
 
 #include "PuzzlePlatformsGameInstance.h"
+#include "Blueprint/UserWidget.h" 
 
 UPuzzlePlatformsGameInstance::UPuzzlePlatformsGameInstance(const FObjectInitializer& ObjectInitializer)
 {
@@ -36,4 +37,15 @@ void UPuzzlePlatformsGameInstance::Join(FString Address)
 	if (!PlayerController) { return; }
 	
 	PlayerController->ClientTravel(Address, ETravelType::TRAVEL_Absolute);
+}
+
+void UPuzzlePlatformsGameInstance::LoadMenu()
+{
+	if (GEngine) {
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, (TEXT("Loading Menu")));
+	}
+	if (UserWidgetClass) {
+	TObjectPtr<UUserWidget> UserWidget = CreateWidget<UUserWidget>(this, UserWidgetClass);
+	UserWidget->AddToViewport();
+	}
 }
