@@ -44,8 +44,18 @@ void UPuzzlePlatformsGameInstance::LoadMenu()
 	if (GEngine) {
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, (TEXT("Loading Menu")));
 	}
-	if (UserWidgetClass) {
-	TObjectPtr<UUserWidget> UserWidget = CreateWidget<UUserWidget>(this, UserWidgetClass);
-	UserWidget->AddToViewport();
-	}
+	if (!UserWidgetClass) { return; }
+	TObjectPtr<UUserWidget> Menu = CreateWidget<UUserWidget>(this, UserWidgetClass);
+
+	if (!Menu) { return; }
+	Menu->AddToViewport();
+
+	TObjectPtr<APlayerController> PlayerController = GetFirstLocalPlayerController();
+	if (!PlayerController) { return; }
+	
+	FInputModeUIOnly ModeData;
+	ModeData.SetWidgetToFocus(Menu->TakeWidget());
+	ModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+	PlayerController->SetInputMode(ModeData);
+	PlayerController->bShowMouseCursor = true;
 }
