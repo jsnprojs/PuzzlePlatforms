@@ -7,6 +7,7 @@
 #include "MenuSystem/MenuInterface.h"
 #include "PuzzlePlatformsGameInstance.generated.h"
 
+class UMainMenu;
 
 UCLASS()
 class PUZZLEPLATFORMS_API UPuzzlePlatformsGameInstance : public UGameInstance, public IMenuInterface
@@ -30,4 +31,7 @@ protected:
 	
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UUserWidget> UserWidgetClass;
+
+private:
+	 TObjectPtr<UMainMenu> Menu;
 };

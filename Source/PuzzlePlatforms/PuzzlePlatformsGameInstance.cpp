@@ -17,8 +17,11 @@ void UPuzzlePlatformsGameInstance::Init()
 
 void UPuzzlePlatformsGameInstance::Host()
 {
+	if (Menu) {
+		Menu->Teardown();
+	}
+
 	TObjectPtr<UWorld> World = GetWorld();
-	UE_LOG(LogTemp, Warning, TEXT("aaaaaaaa!"))
 	if (!World) { return; }
 
 	World->ServerTravel("/Game/ThirdPerson/Maps/ThirdPersonMap?listen");
@@ -44,19 +47,9 @@ void UPuzzlePlatformsGameInstance::LoadMenu()
 {
 
 	if (!UserWidgetClass) { return; }
-	TObjectPtr<UMainMenu> Menu = CreateWidget<UMainMenu>(this, UserWidgetClass);
+	Menu = CreateWidget<UMainMenu>(this, UserWidgetClass);
 
-	if (!Menu) { return; }
-	Menu->AddToViewport();
-
-	TObjectPtr<APlayerController> PlayerController = GetFirstLocalPlayerController();
-	if (!PlayerController) { return; }
 	
-	FInputModeUIOnly ModeData;
-	ModeData.SetWidgetToFocus(Menu->TakeWidget());
-	ModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-	PlayerController->SetInputMode(ModeData);
-	PlayerController->bShowMouseCursor = true;
-
+	Menu->Setup();
 	Menu->SetMenuInterface(this);
 }
